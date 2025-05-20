@@ -1,25 +1,40 @@
 import flet as ft
 
 def main(page: ft.Page):
-    counter = ft.Text("0", size=200, data=0)
+    colors = [
+        ft.Colors.RED,
+        ft.Colors.BLUE,
+        ft.Colors.YELLOW,
+        ft.Colors.PURPLE,
+        ft.Colors.LIME,
+    ]
 
-    def increment_click(e):
-        counter.data += 1
-        counter.value = str(counter.data)
-        counter.update()
+    def get_options():
+        options = []
+        for color in colors:
+            options.append(
+                ft.DropdownOption(
+                    key=color.value,
+                    content=ft.Text(
+                        value=color.value,
+                        color=color,
+                    ),
+                )
+            )
+        return options
 
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, on_click=increment_click
+    def dropdown_changed(e):
+        e.control.color = e.control.value
+        page.update()
+
+    dd = ft.Dropdown(
+        editable=True,
+        label="Color",
+        options=get_options(),
+        on_change=dropdown_changed,
     )
-    page.add(
-        ft.SafeArea(
-            ft.Container(
-                counter,
-                alignment=ft.alignment.center,
-            ),
-            expand=True,
-        )
-    )
+
+    page.add(dd)
 
 
 ft.app(main)
