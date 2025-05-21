@@ -127,20 +127,34 @@ def main(page: ft.Page):
             page.update()
 
     categoria_treino = ft.Dropdown(
-        width=300,
-        hint_text="Selecione uma categoria",
+        width=400,
+        hint_text="Digite ou selecione uma categoria...",
         options=categoria(),
-        on_change=dropdown_categoria
+        on_change=dropdown_categoria,
+        autofocus=True,
+        enable_search=True,  # Propriedade correta para pesquisa
+        text_size=14,
+        content_padding=10,
+        border_color=ft.Colors.BLUE_500,  # Sintaxe CORRETA para v0.28.2
+        border_radius=10,
+        elevation=8,
+        prefix_icon=ft.Icons.SEARCH,  # Sintaxe CORRETA para v0.28.2
     )
 
     exercicios = ft.Dropdown(
-        width=300,
-        hint_text="Selecione um exercício",
-        options=[],  # Inicialmente vazio
+        width=400,
+        hint_text="Digite ou selecione um exercício...",
+        options=[],
         on_change=dropdown_exercicio,
-        disabled=True  # Começa desabilitado até selecionar uma categoria
+        disabled=True,
+        enable_search=True,  # Propriedade correta para pesquisa
+        text_size=14,
+        content_padding=10,
+        border_color=ft.Colors.GREEN_500,  # Sintaxe CORRETA
+        border_radius=10,
+        elevation=8,
+        prefix_icon=ft.Icons.FITNESS_CENTER,  # Sintaxe CORRETA
     )
-
     page.add(
         ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
         ft.Divider(),
