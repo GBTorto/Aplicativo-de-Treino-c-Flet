@@ -130,8 +130,8 @@ def main(page: ft.Page):
                     resultados.controls.append(
                         ft.Image(
                             src=gif_url,
-                            width=900,
-                            height=900,
+                            width=300,
+                            height=300,
                             fit=ft.ImageFit.CONTAIN,
                             repeat=ft.ImageRepeat.NO_REPEAT,
                             border_radius=ft.border_radius.all(10),
