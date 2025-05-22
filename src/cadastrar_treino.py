@@ -1,6 +1,7 @@
 import flet as ft
 import requests
 from deep_translator import GoogleTranslator
+import json
 
 API_KEY = "9cf8d58116mshf0fd1c5673119d3p121530jsnd08562d622dd"
 API_HOST = "exercisedb.p.rapidapi.com"
@@ -77,12 +78,14 @@ def main(page: ft.Page):
         
         dados_exercicios = lista_exercicio(selecionado_en)
 
+        print(json.dumps(dados_exercicios[0], indent=2))
+
         # Atualiza o dropdown de exercícios
         exercicios.options = [
             ft.dropdown.DropdownOption(
-                key=ex['name'],
-                text=traduzir_exercicios(ex['name'].capitalize())
-            ) for ex in dados_exercicios
+                    key=ex['name'].lower(),
+                    text=traduzir_exercicios(ex['name'].capitalize())  # traduzido visivelmente
+                ) for ex in dados_exercicios
         ]
         
         # Habilita o dropdown de exercícios
@@ -97,32 +100,56 @@ def main(page: ft.Page):
         page.update()
 
     def dropdown_exercicio(e):
-        exercicio_selecionado = e.control.value
+        exercicio_selecionado = e.control.value.lower()
         if exercicio_selecionado:
             # Limpa os resultados anteriores
             resultados.controls.clear()
             
             # Encontra o exercício selecionado nos dados
             exercicio_info = next((ex for ex in dados_exercicios 
-                                if traduzir_exercicios(ex['name'].capitalize()) == exercicio_selecionado), None)
+                                    if ex['name'].lower() == exercicio_selecionado), None)
+
             
             if exercicio_info:
-                # Mostra informações detalhadas do exercício
                 resultados.controls.append(
-                    ft.Text(f"🏋️ Exercício selecionado: {exercicio_selecionado}", 
-                        size=18, weight="bold")
+                    ft.Text(f"🏋️ Exercício selecionado: {traduzir_exercicios(exercicio_info['name'].capitalize())}", 
+                            size=18, weight="bold")
                 )
                 resultados.controls.append(
                     ft.Text(f"🔧 Equipamento: {traduzir_exercicios(exercicio_info['equipment'].capitalize())}")
                 )
-                resultados.controls.append(
-                    ft.Text(f"📝 Instruções:", weight="bold")
-                )
-                # Quebra as instruções em parágrafos
-                instrucoes = exercicio_info.get('instructions', '').split('. ')
-                for instr in instrucoes:
-                    if instr.strip():
-                        resultados.controls.append(ft.Text(f"• {instr}"))
+
+                if "gifUrl" in exercicio_info and exercicio_info["gifUrl"]:
+                    gif_url = exercicio_info["gifUrl"]
+                    # Garante que a URL começa com http/https
+                    if not gif_url.startswith(('http://', 'https://')):
+                        gif_url = f'https://{gif_url}'
+                    
+                    print(f"Tentando carregar GIF de: {gif_url}")  # Debug
+                    
+                    resultados.controls.append(
+                        ft.Image(
+                            src=gif_url,
+                            width=900,
+                            height=900,
+                            fit=ft.ImageFit.CONTAIN,
+                            repeat=ft.ImageRepeat.NO_REPEAT,
+                            border_radius=ft.border_radius.all(10),
+                        )
+                    )
+                else:
+                    resultados.controls.append(
+                        ft.Text("❌ Nenhum GIF disponível para este exercício.", color=ft.colors.RED)
+                    )
+
+                # Se quiser, também pode adicionar instruções se existirem:
+                if "instructions" in exercicio_info and exercicio_info["instructions"]:
+                    resultados.controls.append(
+                        ft.Text("📝 Instruções:", weight="bold")
+                    )
+                    for instrucao in exercicio_info["instructions"]:
+                        resultados.controls.append(ft.Text(f"• {traduzir_exercicios(instrucao)}"))
+
             
             page.update()
 
@@ -131,8 +158,10 @@ def main(page: ft.Page):
         hint_text="Digite ou selecione uma categoria...",
         options=categoria(),
         on_change=dropdown_categoria,
+        editable=True,
         autofocus=True,
         enable_search=True,  # Propriedade correta para pesquisa
+        enable_filter=True,
         text_size=14,
         content_padding=10,
         border_color=ft.Colors.BLUE_500,  # Sintaxe CORRETA para v0.28.2
@@ -146,8 +175,10 @@ def main(page: ft.Page):
         hint_text="Digite ou selecione um exercício...",
         options=[],
         on_change=dropdown_exercicio,
+        editable=True,
         disabled=True,
         enable_search=True,  # Propriedade correta para pesquisa
+        enable_filter=True,
         text_size=14,
         content_padding=10,
         border_color=ft.Colors.GREEN_500,  # Sintaxe CORRETA
