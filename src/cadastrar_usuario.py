@@ -1,5 +1,6 @@
 import flet as ft
 import re
+from banco_dados import banco_dados_usuarios
 
 def main(page: ft.Page):
     def senha_valida(senha):
@@ -28,14 +29,12 @@ def main(page: ft.Page):
             mensagem.value = "Email inválido"
         elif not nome.value:
             mensagem.value = "Digite um nome"
+        elif not senha_valida(senha.value):
+            mensagem.value = "Senha inválida: precisa conter número, letra maiúscula e caractere especial."
         else:
-            if not senha_valida(senha.value):
-                mensagem.value = "Senha inválida: precisa conter número, letra maiúscula e caractere especial."
-            elif not email.value or not nome.value:
-                mensagem.value = "Preencha todos os campos."
-            else:
-                mensagem.value = "Cadastro realizado com sucesso!"
-                # Aqui você pode chamar a função que salva os dados, etc.
+            mensagem.value = "Cadastro realizado com sucesso!"
+            banco_dados_usuarios(email.value, nome.value, senha.value)
+            # Aqui você pode chamar a função que salva os dados, etc.
         page.update()
 
     botao_cadastrar = ft.ElevatedButton("Cadastrar", on_click=tentar_cadastrar)
