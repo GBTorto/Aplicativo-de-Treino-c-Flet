@@ -42,16 +42,18 @@ def main(page: ft.Page):
             cadastrar_usuario.main(page)
         
         elif page.route == "/tela_principal":
-            tela_principal.main(page)
+            tela_principal.main(page, id_usuario)
 
         elif page.route == "/cadastrar_treino":
-            cadastrar_treino.main(page)
+            cadastrar_treino.main(page, id_usuario)
 
         page.update()
 
     def verificar_login(e):
+        global id_usuario
+
         if verificar_usuario(email.value, senha.value):
-            print("A")
+            id_usuario = verificar_usuario(email.value, senha.value)
             page.go("/tela_principal")
         else:
             print("Faça seu cadastro")

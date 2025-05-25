@@ -1,6 +1,6 @@
 import flet as ft
 
-def main(page: ft.Page):
+def main(page: ft.Page, id_usuario):
     cadastrar_treino = ft.Button(
         text="Cadastrar treino",
         style=ft.ButtonStyle(

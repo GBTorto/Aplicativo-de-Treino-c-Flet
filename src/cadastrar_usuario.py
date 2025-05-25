@@ -32,10 +32,11 @@ def main(page: ft.Page):
         elif not senha_valida(senha.value):
             mensagem.value = "Senha inválida: precisa conter número, letra maiúscula e caractere especial."
         else:
-            # mensagem.value = "Cadastro realizado com sucesso!"
-            banco_dados_usuarios(email.value, nome.value, senha.value)
-            page.go("/tela_principal")
-            # Aqui você pode chamar a função que salva os dados, etc.
+            cadastro_sucesso, msg = banco_dados_usuarios(email.value, nome.value, senha.value)
+            if cadastro_sucesso:
+                page.go("/tela_principal")
+            else:
+                mensagem.value = msg
         page.update()
 
     botao_cadastrar = ft.ElevatedButton("Cadastrar", on_click=tentar_cadastrar)

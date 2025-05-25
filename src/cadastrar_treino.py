@@ -39,7 +39,7 @@ def traduzir_exercicios(nome_en):
     except Exception as e:
         return nome_en
 
-def main(page: ft.Page):
+def main(page: ft.Page, id_usuario):
     page.scroll = "auto"
     resultados = ft.Column()
     categoria_treino_lista = list(categorias_api.keys())
@@ -200,6 +200,7 @@ def main(page: ft.Page):
                 ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
                 ft.Divider(),
                 ft.Text("Exercícios:", size=20, weight="bold"),
+                # ft.Text(f"{id_usuario}"),
                 resultados
             ]
         )
