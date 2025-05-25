@@ -32,8 +32,9 @@ def main(page: ft.Page):
         elif not senha_valida(senha.value):
             mensagem.value = "Senha inválida: precisa conter número, letra maiúscula e caractere especial."
         else:
-            mensagem.value = "Cadastro realizado com sucesso!"
+            # mensagem.value = "Cadastro realizado com sucesso!"
             banco_dados_usuarios(email.value, nome.value, senha.value)
+            page.go("/tela_principal")
             # Aqui você pode chamar a função que salva os dados, etc.
         page.update()
 

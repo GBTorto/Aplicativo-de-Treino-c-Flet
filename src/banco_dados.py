@@ -21,5 +21,21 @@ def banco_dados_usuarios(email, nome, senha):
         (email, nome, senha)
     )
 
+    cursor.execute("SELECT * FROM cadastro_pessoas")
+
+
     banco.commit()
     banco.close()
+
+def verificar_usuario(email, senha):
+    usuarios = sqlite3.connect("../banco_de_dados.db")
+    cursor = usuarios.cursor()
+
+    verificacao = f"SELECT * FROM cadastro_pessoas WHERE email=? and senha=?"
+    cursor.execute(verificacao, (email, senha))
+
+    resultado = cursor.fetchone()
+
+    usuarios.close()
+
+    return resultado is not None

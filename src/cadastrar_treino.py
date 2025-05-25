@@ -186,11 +186,23 @@ def main(page: ft.Page):
         elevation=8,
         prefix_icon=ft.Icons.FITNESS_CENTER,  # Sintaxe CORRETA
     )
-    page.add(
-        ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
-        ft.Divider(),
-        ft.Text("Exercícios:", size=20, weight="bold"),
-        resultados
+    # page.add(
+    #     ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
+    #     ft.Divider(),
+    #     ft.Text("Exercícios:", size=20, weight="bold"),
+    #     resultados
+    # )
+
+    page.views.append(
+        ft.View(
+            "/cadastrar_treino",
+            controls=[
+                ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
+                ft.Divider(),
+                ft.Text("Exercícios:", size=20, weight="bold"),
+                resultados
+            ]
+        )
     )
 
-ft.app(main)
+# ft.app(main)
