@@ -34,7 +34,7 @@ def main(page: ft.Page):
         else:
             cadastro_sucesso, msg = banco_dados_usuarios(email.value, nome.value, senha.value)
             if cadastro_sucesso:
-                page.go("/tela_principal")
+                page.go("/")
             else:
                 mensagem.value = msg
         page.update()

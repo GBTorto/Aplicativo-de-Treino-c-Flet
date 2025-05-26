@@ -25,9 +25,13 @@ def banco_dados_usuarios(email, nome, senha):
             (email, nome, senha)
         )
 
+        # id_usuario = cursor.execute(
+        #     "SELECT ID FROM cadastro_pessoas WHERE email=?", (email,)
+        # )
+
         banco.commit()
         banco.close()
-        return True
+        return True, ("id_usuario")
 
 def verificar_usuario(email, senha):
     usuarios = sqlite3.connect("../banco_de_dados.db")
@@ -37,6 +41,18 @@ def verificar_usuario(email, senha):
     cursor.execute(verificacao, (email, senha))
 
     resultado = cursor.fetchone()
+
+    cursor.execute("PRAGMA foreign_keys = ON")
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro_exercicios(
+                    ID_Cadastro_Exercicio INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    ID_Usuario INTEGER, 
+                    categoria,
+                    exercicio,
+                    gif,
+                    instrucoes, 
+                    FOREIGN KEY (ID_Usuario) REFERENCES cadastro_pessoas(ID)
+                )""")
 
     usuarios.close()
 
@@ -51,17 +67,6 @@ def verificar_usuario(email, senha):
 def banco_dados_exercicios(id_chave_estrageira, categoria, exercicio, gif, instrucoes):
     banco = sqlite3.connect("../banco_de_dados.db")
     cursor = banco.cursor()
-    cursor.execute("PRAGMA foreign_keys = ON")
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro_exercicios(
-                    ID_Cadastro_Exercicio INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    ID_Usuario INTEGER, 
-                    categoria,
-                    exercicio,
-                    gif,
-                    instrucoes, 
-                    FOREIGN KEY (ID_Usuario) REFERENCES cadastro_pessoas(ID)
-                )""")
     
     cursor.execute(
         "INSERT INTO cadastro_exercicios (ID_Usuario, categoria, exercicio, gif, instrucoes) VALUES (?, ?, ?, ?, ?)",
@@ -84,29 +89,29 @@ def exercicios_usuarios(categoria, id_chave_estrangeira):
 
     return resultado
 
-# try:
-#     # Tenta conectar ao banco de dados
-#     banco = sqlite3.connect("../banco_de_dados.db")
-#     cursor = banco.cursor()
+try:
+    # Tenta conectar ao banco de dados
+    banco = sqlite3.connect("../banco_de_dados.db")
+    cursor = banco.cursor()
     
-#     # Executa a consulta
-#     # cursor.execute("DELETE FROM cadastro_pessoas WHERE ID > 2")
-#     cursor.execute("SELECT * FROM cadastro_exercicios")
-#     # cursor.execute("DROP TABLE cadastro_exercicios")
+    # Executa a consulta
+    # cursor.execute("DELETE FROM cadastro_pessoas WHERE ID IS NULL")
+    cursor.execute("SELECT * FROM cadastro_pessoas")
+    # cursor.execute("DROP TABLE cadastro_pessoas")
     
-#     # Recupera os resultados
-#     resultados = cursor.fetchall()
+    # Recupera os resultados
+    resultados = cursor.fetchall()
 
-#     # banco.commit()
+    banco.commit()
     
-#     # Exibe os resultados
-#     for linha in resultados:
-#         print(linha)
+    # Exibe os resultados
+    for linha in resultados:
+        print(linha)
         
-# except sqlite3.Error as erro:
-#     print(f"Erro ao acessar o banco de dados: {erro}")
+except sqlite3.Error as erro:
+    print(f"Erro ao acessar o banco de dados: {erro}")
     
-# finally:
-#     # Fecha a conexão
-#     if 'banco' in locals():
-#         banco.close()
+finally:
+    # Fecha a conexão
+    if 'banco' in locals():
+        banco.close()
