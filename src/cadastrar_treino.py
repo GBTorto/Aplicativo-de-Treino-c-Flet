@@ -1,6 +1,7 @@
 import flet as ft
 import requests
 from deep_translator import GoogleTranslator
+from banco_dados import banco_dados_exercicios
 import json
 
 API_KEY = "9cf8d58116mshf0fd1c5673119d3p121530jsnd08562d622dd"
@@ -43,13 +44,15 @@ def main(page: ft.Page, id_usuario):
     page.scroll = "auto"
     resultados = ft.Column()
     categoria_treino_lista = list(categorias_api.keys())
+
+    id_chave_estrangeira = id_usuario
     
     # Variável para armazenar os dados dos exercícios
     dados_exercicios = []
 
     def categoria():
         return [
-            ft.dropdown.DropdownOption(key=tipo, text=tipo) 
+            ft.dropdown.DropdownOption(key=tipo, text=tipo)
             for tipo in categoria_treino_lista
         ]
     
@@ -100,6 +103,7 @@ def main(page: ft.Page, id_usuario):
         page.update()
 
     def dropdown_exercicio(e):
+        global exercicio_info
         exercicio_selecionado = e.control.value.lower()
         if exercicio_selecionado:
             # Limpa os resultados anteriores
@@ -150,8 +154,15 @@ def main(page: ft.Page, id_usuario):
                     for instrucao in exercicio_info["instructions"]:
                         resultados.controls.append(ft.Text(f"• {traduzir_exercicios(instrucao)}"))
 
-            
+            cadastro.disabled=False
+            cadastro.visible=True
             page.update()
+    
+    def cadastrar_exercicio(e):
+        instrucoes = exercicio_info.get("instructions", [])
+        gif = exercicio_info.get("gifUrl", "")
+        banco_dados_exercicios(id_chave_estrangeira, categoria_treino.value, exercicios.value, gif, json.dumps(instrucoes))
+        page.go("/tela_principal")
 
     categoria_treino = ft.Dropdown(
         width=400,
@@ -186,6 +197,20 @@ def main(page: ft.Page, id_usuario):
         elevation=8,
         prefix_icon=ft.Icons.FITNESS_CENTER,  # Sintaxe CORRETA
     )
+
+    cadastro = ft.Button(
+        text="Cadastrar",
+        style=(
+            ft.ButtonStyle(
+                bgcolor=ft.Colors.BLUE_500,
+                color=ft.Colors.WHITE
+            )
+        ),
+        disabled=True,
+        visible=False,
+        on_click=cadastrar_exercicio
+    )
+
     # page.add(
     #     ft.Row([categoria_treino, exercicios], alignment=ft.MainAxisAlignment.CENTER),
     #     ft.Divider(),
@@ -201,8 +226,10 @@ def main(page: ft.Page, id_usuario):
                 ft.Divider(),
                 ft.Text("Exercícios:", size=20, weight="bold"),
                 # ft.Text(f"{id_usuario}"),
-                resultados
-            ]
+                resultados,
+                cadastro
+            ],
+            scroll="auto"
         )
     )
 
