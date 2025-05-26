@@ -89,29 +89,32 @@ def exercicios_usuarios(categoria, id_chave_estrangeira):
 
     return resultado
 
-try:
-    # Tenta conectar ao banco de dados
-    banco = sqlite3.connect("../banco_de_dados.db")
-    cursor = banco.cursor()
-    
-    # Executa a consulta
-    # cursor.execute("DELETE FROM cadastro_pessoas WHERE ID IS NULL")
-    cursor.execute("SELECT * FROM cadastro_pessoas")
-    # cursor.execute("DROP TABLE cadastro_pessoas")
-    
-    # Recupera os resultados
-    resultados = cursor.fetchall()
+# def banco_dados_detalhes_exercicio():
 
-    banco.commit()
+
+# try:
+#     # Tenta conectar ao banco de dados
+#     banco = sqlite3.connect("../banco_de_dados.db")
+#     cursor = banco.cursor()
     
-    # Exibe os resultados
-    for linha in resultados:
-        print(linha)
+#     # Executa a consulta
+#     # cursor.execute("DELETE FROM cadastro_pessoas WHERE ID IS NULL")
+#     cursor.execute("SELECT * FROM cadastro_pessoas")
+#     # cursor.execute("DROP TABLE cadastro_pessoas")
+    
+#     # Recupera os resultados
+#     resultados = cursor.fetchall()
+
+#     banco.commit()
+    
+#     # Exibe os resultados
+#     for linha in resultados:
+#         print(linha)
         
-except sqlite3.Error as erro:
-    print(f"Erro ao acessar o banco de dados: {erro}")
+# except sqlite3.Error as erro:
+#     print(f"Erro ao acessar o banco de dados: {erro}")
     
-finally:
-    # Fecha a conexão
-    if 'banco' in locals():
-        banco.close()
+# finally:
+#     # Fecha a conexão
+#     if 'banco' in locals():
+#         banco.close()

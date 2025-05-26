@@ -2,6 +2,7 @@ import flet as ft
 import cadastrar_usuario
 import tela_principal
 import cadastrar_treino
+import info_exercicios
 from banco_dados import verificar_usuario
 
 def main(page: ft.Page):
@@ -46,6 +47,9 @@ def main(page: ft.Page):
 
         elif page.route == "/cadastrar_treino":
             cadastrar_treino.main(page, id_usuario)
+        
+        elif page.route == "/info_exercicios":
+            info_exercicios.main(page, id_usuario)
 
         page.update()
 

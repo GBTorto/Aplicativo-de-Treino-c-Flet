@@ -20,13 +20,14 @@ def main(page: ft.Page, id_usuario):
         for categoria in categorias:
             banco_dados = exercicios_usuarios(categoria, id_usuario)
             if banco_dados:  # Se não for vazio
+                # Adiciona o título da categoria
+                controles.append(ft.Text(categoria.upper(), size=20, weight="bold"))
+                
+                # Adiciona os botões de exercícios
                 for colunas_banco_dados in banco_dados:
-                    controles.append(ft.Text(f"{colunas_banco_dados[2]}"))  # ou colunas_banco_dados[n], conforme coluna desejada
-                    controles.append(ft.Button(text=f"{colunas_banco_dados[3]}"))
-                    # for ex in colunas_banco_dados:
-                    #     controles.append(ft.Button(text=f"{ex}"))
-            else:
-                pass
+                    nome_exercicio = colunas_banco_dados[3]  # ou [2], dependendo de onde está o nome
+                    controles.append(ft.Button(text=nome_exercicio, on_click=lambda e: page.go("/info_exercicios")))
+                    
         return controles
 
 
