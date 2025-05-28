@@ -3,6 +3,7 @@ import cadastrar_usuario
 import tela_principal
 import cadastrar_treino
 import info_exercicios
+import urllib.parse
 from banco_dados import verificar_usuario
 
 def main(page: ft.Page):
@@ -48,8 +49,19 @@ def main(page: ft.Page):
         elif page.route == "/cadastrar_treino":
             cadastrar_treino.main(page, id_usuario)
         
-        elif page.route == "/info_exercicios":
-            info_exercicios.main(page, id_usuario)
+        elif page.route.startswith("/info_exercicios"):
+            parsed = urllib.parse.urlparse(page.route)
+            params = urllib.parse.parse_qs(parsed.query)
+
+
+            if "id" in params:
+                id_exercicio = params["id"][0]
+            else:
+                id_exercicio = None
+            
+            print(id_exercicio)
+
+            info_exercicios.main(page, id_exercicio)
 
         page.update()
 

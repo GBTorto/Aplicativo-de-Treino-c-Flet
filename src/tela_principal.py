@@ -15,6 +15,7 @@ categorias = [
 ]
 
 def main(page: ft.Page, id_usuario):
+
     def separar_categoria():
         controles = []
         for categoria in categorias:
@@ -25,8 +26,9 @@ def main(page: ft.Page, id_usuario):
                 
                 # Adiciona os botões de exercícios
                 for colunas_banco_dados in banco_dados:
+                    id_exercicio = colunas_banco_dados[0]
                     nome_exercicio = colunas_banco_dados[3]  # ou [2], dependendo de onde está o nome
-                    controles.append(ft.Button(text=nome_exercicio, on_click=lambda e: page.go("/info_exercicios")))
+                    controles.append(ft.Button(text=nome_exercicio, on_click=lambda e, id=id_exercicio: page.go(f"/info_exercicios?id={id}")))
                     
         return controles
 
